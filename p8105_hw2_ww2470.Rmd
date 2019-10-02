@@ -1,0 +1,32 @@
+---
+title: "p8105_hw2_ww1234"
+author: "Jason Wang"
+date: "10/2/2019"
+output: github_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(readxl)
+
+
+```
+
+# Question 1 , load in a dataset
+```{r, question1, echo = TRUE}
+## load in a dataset
+
+trash_wheel_data = read_excel(path = "../data/Trash-Wheel-Collection-Totals-8-6-19.xlsx", 
+                              sheet = "Mr. Trash Wheel",
+                              range = cell_cols("A:N")
+                              ) %>% 
+  janitor::clean_names() %>% 
+  na.omit()
+                              
+
+
+
+
+```
+
