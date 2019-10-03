@@ -106,14 +106,16 @@ pols_month_dataset = read_csv(file = "../data/pols-month.csv") %>%   ##load pols
 
 ```{r, snp, echo = TRUE}
 ##load and clean data in snp.csv
-snp_dataset = read_csv(file = "../data/snp.csv") %>% 
-  janitor::clean_names() %>% 
+snp_dataset = read_csv(file = "../data/snp.csv") %>% ##load the data
+  janitor::clean_names() %>%                         ##clean the data
   separate(col = "date", sep = "/", into = c("month", "day", "year"), 
            convert = type.convert("month", "day", "year", numerals = c("allow.loss"))) %>% 
-  transform(month = month.abb[month]) %>% 
-  select("year", "month", "day", everything())
+  transform(month = month.abb[month]) %>%            ##separate the data
+  select("year", "month", "day", everything())       ##arrange the data
   
   
 
 ```
+
+
 

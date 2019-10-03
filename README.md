@@ -8,3 +8,8 @@
 
 # qustion 2
 ##load and clean the data of pols-months
+##load and clean the data of snp
+##load and clean the data of unemployment
+
+# question 3
+## load and clean the popular baby name dataset
