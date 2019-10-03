@@ -5,3 +5,6 @@
 ### Creat a single R Markdown file
 
 ### loading the data of 2017 and 2018
+
+# qustion 2
+##load and clean the data of pols-months
