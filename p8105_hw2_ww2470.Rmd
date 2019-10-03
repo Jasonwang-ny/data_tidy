@@ -16,7 +16,7 @@ library(lubridate)
 
 ```
 
-# Question 1 , 
+# Question 1
 ##load and clean data for Mr. Trash Wheel
 ```{r, question1, echo = TRUE}
 ## load in a dataset
@@ -86,12 +86,13 @@ the total precipitation in 2018 is `r sum(precipitation_dataset_2018$total, na.r
 
 Write a paragraph about these data; you are encouraged to use inline R. Be sure to note the number of observations in both resulting datasets, and give examples of key variables. For available data, what was the total precipitation in 2018? What was the median number of sports balls in a dumpster in 2017?
 
-#question 2
-```{r}
+# question 2
+```{r, pols, echo = TRUE}
 ##load and clean data in pols-month.csv
 pols_month_dataset = read_csv(file = "../data/pols-month.csv") %>%   ##load pols-month.csv
   janitor::clean_names() %>% ##clean the dataset
-  separate(col = "mon", sep = "-", into = c("year", "month", "day"), convert = type.convert("month", "year", "day" , numerals = c("allow.loss"))) %>%  ##separate to year, month, day, and transfer month format "01" "02"... to "1", "2)
+  separate(col = "mon", sep = "-", into = c("year", "month", "day"), 
+           convert = type.convert("month", "year", "day" , numerals = c("allow.loss"))) %>%  ##separate to year, month, day, and transfer month format "01" "02"... to "1", "2)
   transform(month = month.abb[month]) %>%   ##replace month number with month name
   mutate(president = case_when(
     prez_dem == 1 ~ "dem",
@@ -100,6 +101,19 @@ pols_month_dataset = read_csv(file = "../data/pols-month.csv") %>%   ##load pols
   )) %>%  ##add variable president with value "dem" and "gop"
   select("year", "month", "gov_gop":"rep_gop", "gov_dem":"rep_dem", "president") ##remove prez_gop, prez_dem and day variable
 
+
+```
+
+```{r, snp, echo = TRUE}
+##load and clean data in snp.csv
+snp_dataset = read_csv(file = "../data/snp.csv") %>% 
+  janitor::clean_names() %>% 
+  separate(col = "date", sep = "/", into = c("month", "day", "year"), 
+           convert = type.convert("month", "day", "year", numerals = c("allow.loss"))) %>% 
+  transform(month = month.abb[month]) %>% 
+  select("year", "month", "day", everything())
+  
+  
 
 ```
 
