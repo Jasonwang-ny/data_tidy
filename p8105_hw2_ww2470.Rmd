@@ -44,5 +44,17 @@ precipitation_dataset_2017$year <- c("2017", "2017", "2017", "2017",
                                      "2017", "2017", "2017", "2017"
                                      )
 
+##read and clean precipitation data of 2018
+precipitation_dataset_2018 = read_excel(path = "../data/Trash-Wheel-Collection-Totals-8-6-19.xlsx",
+                                        sheet = "2018 Precipitation",
+                                        range = "A2:B14") %>% 
+  na.omit() %>% 
+  janitor::clean_names() 
+precipitation_dataset_2017$year <- c("2018", "2018", "2018", "2018",
+                                     "2018", "2018", "2018", "2018",
+                                     "2018", "2018", "2018", "2018"
+                                     )
+
+
 ```
 
