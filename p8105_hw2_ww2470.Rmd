@@ -33,7 +33,7 @@ trash_wheel_data$sports_balls = round(as.integer(trash_wheel_data$sports_balls),
 
 ##Read and clean precipitation data of 2017
 
-```{r}
+```{r, echo = TRUE}
 ##read and clean precipitation data of 2017
 precipitation_dataset_2017 = read_excel(path = "../data/Trash-Wheel-Collection-Totals-8-6-19.xlsx",
                                         sheet = "2017 Precipitation",
@@ -50,7 +50,7 @@ precipitation_dataset_2017$year <- c("2017", "2017", "2017", "2017",
 
 
 ##read and clean precipitation data of 2018
-```{r}
+```{r, echo = TRUE}
 precipitation_dataset_2018 = read_excel(path = "../data/Trash-Wheel-Collection-Totals-8-6-19.xlsx",
                                         sheet = "2018 Precipitation",
                                         range = "A2:B14") %>% 
@@ -64,7 +64,7 @@ precipitation_dataset_2018$year <- c("2018", "2018", "2018", "2018",
 ```
 
 ##combination the two dataset of precipitation_dataset_2017 and precipitation_dataset_2018
-```{r}
+```{r, echo = FALSE}
 precipitation_dataset = left_join(
   precipitation_dataset_2017, 
   precipitation_dataset_2018, 
@@ -76,7 +76,30 @@ precipitation_dataset = left_join(
 precipitation_dataset$month = month.name[precipitation_dataset$month]
 
 
+
 ```
 
+the number of observation in 2017 is `r count(precipitation_dataset_2017)`.
+the number of observation in 2018 is `r count(precipitation_dataset_2018)`.
+the total precipitation in 2018 is `r sum(precipitation_dataset_2018$total, na.rm = TRUE)`.
+
+
+Write a paragraph about these data; you are encouraged to use inline R. Be sure to note the number of observations in both resulting datasets, and give examples of key variables. For available data, what was the total precipitation in 2018? What was the median number of sports balls in a dumpster in 2017?
 
 #question 2
+```{r}
+##load and clean data in pols-month.csv
+pols_month_dataset = read_csv(file = "../data/pols-month.csv") %>%   ##load pols-month.csv
+  janitor::clean_names() %>% ##clean the dataset
+  separate(col = "mon", sep = "-", into = c("year", "month", "day"), convert = type.convert("month", "year", "day" , numerals = c("allow.loss"))) %>%  ##separate to year, month, day, and transfer month format "01" "02"... to "1", "2)
+  transform(month = month.abb[month]) %>%   ##replace month number with month name
+  mutate(president = case_when(
+    prez_dem == 1 ~ "dem",
+    prez_gop == 1 ~ "gop",
+    TRUE ~ ""
+  )) %>%  ##add variable president with value "dem" and "gop"
+  select("year", "month", "gov_gop":"rep_gop", "gov_dem":"rep_dem", "president") ##remove prez_gop, prez_dem and day variable
+
+
+```
+
