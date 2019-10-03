@@ -9,11 +9,14 @@ output: github_document
 knitr::opts_chunk$set(echo = TRUE)
 library(tidyverse)
 library(readxl)
+library(tidyr)
+library(dplyr)
 
 
 ```
 
-# Question 1 , load in a dataset
+# Question 1 , 
+##load in a dataset 
 ```{r, question1, echo = TRUE}
 ## load in a dataset
 
@@ -22,11 +25,38 @@ trash_wheel_data = read_excel(path = "../data/Trash-Wheel-Collection-Totals-8-6-
                               range = cell_cols("A:N")
                               ) %>% 
   janitor::clean_names() %>% 
-  na.omit()
-                              
+  na.omit() 
+trash_wheel_data$sports_balls = round(as.integer(trash_wheel_data$sports_balls), digits = 0)
 
+```
 
+## loading the precipitation data for 2017 and 2018
 
+```{r}
+### load precipitation data of 2017
+precipitation_dataset_2017 = read_excel(path = "../data/Trash-Wheel-Collection-Totals-8-6-19.xlsx",
+                                        sheet = "2017 Precipitation",
+                                        range = "A3:B14",
+                                        col_names = c("month", "y2017")) %>% 
+  na.omit() %>% 
+  janitor::clean_names()
+
+### load precipitation data of 2018
+
+precipitation_dataset_2018 = read_excel(path = "../data/Trash-Wheel-Collection-Totals-8-6-19.xlsx",
+                                        sheet = "2018 Precipitation",
+                                        range = "A2:B14") %>% 
+  na.omit() %>% 
+  janitor::clean_names() 
+  
+
+### combine precipitation datasets
+precipitation_dataset = left_join(
+  precipitation_dataset_2017, 
+  precipitation_dataset_2018, 
+  by = "month"
+) 
+ precipitation_dataset = rename(precipitation_dataset, y2017 = 2017, y2018 = 2018)
 
 ```
 
