@@ -11,12 +11,13 @@ library(tidyverse)
 library(readxl)
 library(tidyr)
 library(dplyr)
+library(lubridate)
 
 
 ```
 
 # Question 1 , 
-##load in a dataset 
+##load and clean data for Mr. Trash Wheel
 ```{r, question1, echo = TRUE}
 ## load in a dataset
 
@@ -30,7 +31,7 @@ trash_wheel_data$sports_balls = round(as.integer(trash_wheel_data$sports_balls),
 
 ```
 
-##Read and clean precipitation data
+##Read and clean precipitation data of 2017
 
 ```{r}
 ##read and clean precipitation data of 2017
@@ -44,17 +45,37 @@ precipitation_dataset_2017$year <- c("2017", "2017", "2017", "2017",
                                      "2017", "2017", "2017", "2017"
                                      )
 
+
+```
+
+
 ##read and clean precipitation data of 2018
+```{r}
 precipitation_dataset_2018 = read_excel(path = "../data/Trash-Wheel-Collection-Totals-8-6-19.xlsx",
                                         sheet = "2018 Precipitation",
                                         range = "A2:B14") %>% 
   na.omit() %>% 
   janitor::clean_names() 
-precipitation_dataset_2017$year <- c("2018", "2018", "2018", "2018",
+precipitation_dataset_2018$year <- c("2018", "2018", "2018", "2018",
                                      "2018", "2018", "2018", "2018",
                                      "2018", "2018", "2018", "2018"
                                      )
 
+```
+
+##combination the two dataset of precipitation_dataset_2017 and precipitation_dataset_2018
+```{r}
+precipitation_dataset = left_join(
+  precipitation_dataset_2017, 
+  precipitation_dataset_2018, 
+  by = "month",
+  suffix = c("_2017", "_2018")
+) %>% 
+  select("month", "total_2017", "total_2018") %>% 
+  rename("2017" = "total_2017", "2018" = "total_2018") 
+precipitation_dataset$month = month.name[precipitation_dataset$month]
+
 
 ```
+
 
