@@ -117,5 +117,46 @@ snp_dataset = read_csv(file = "../data/snp.csv") %>% ##load the data
 
 ```
 
+```{r, unemployment, echo = TRUE}
+##load and clean unemployment data
+unemployment_dataset = read_csv(file = "../data/unemployment.csv") %>% 
+  pivot_longer(
+    Jan:Dec,
+    names_to = "month",
+    values_to = "unemployment"
+  ) %>% 
+  janitor::clean_names()
+  
+
+```
+
+```{r, merg_snp_pols_unem, echo = TRUE}
+## first merge the snp and pols dataset
+merg_snp_pols_dataset = full_join(snp_dataset, pols_month_dataset, by = c("year", "month"))
+
+merg_snp_pols_unem_dataset = left_join(merg_snp_pols_dataset, unemployment_dataset, by = c("year", "month"))
+
+```
+
+summary
+Write a short paragraph about these datasets. Explain briefly what each dataset contained, and describe the resulting dataset (e.g. give the dimension, range of years, and names of key variables). 
+
+# question 3
+```{r, babyname, echo = TRUE}
+#load and clean the data
+popular_baby_name_dataset = read_csv(file = "../data/Popular_Baby_Names.csv") %>% 
+  janitor::clean_names() %>% 
+  distinct()
+
+popular_male_baby_name_dataset = popular_baby_name_dataset %>% 
+  filter(gender == "MALE") %>% 
+  filter(ethnicity == "WHITE NON HISPANIC") %>% 
+  filter(year_of_birth == 2016)
+ 
+plot(popular_male_baby_name_dataset$rank, popular_male_baby_name_dataset$count,
+     xlab = "the number of children with a name",
+     ylab = "the rank in popularity of that name")
+  
+```
 
 
