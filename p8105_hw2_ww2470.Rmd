@@ -16,7 +16,7 @@ library(lubridate)
 
 ```
 
-# Question 1
+# problem 1
 ##load and clean data for Mr. Trash Wheel
 ```{r, question1, echo = TRUE}
 ## load in a dataset
@@ -29,6 +29,12 @@ trash_wheel_data = read_excel(path = "../data/Trash-Wheel-Collection-Totals-8-6-
   na.omit() 
 trash_wheel_data$sports_balls = round(as.integer(trash_wheel_data$sports_balls), digits = 0)
 
+###checkpoints###
+head(trash_wheel_data,5)
+summary(trash_wheel_data)
+count(trash_wheel_data)
+###checkend###
+
 ```
 
 ##Read and clean precipitation data of 2017
@@ -38,13 +44,15 @@ trash_wheel_data$sports_balls = round(as.integer(trash_wheel_data$sports_balls),
 precipitation_dataset_2017 = read_excel(path = "../data/Trash-Wheel-Collection-Totals-8-6-19.xlsx",
                                         sheet = "2017 Precipitation",
                                         range = "A2:B14") %>% 
-  na.omit() %>% 
-  janitor::clean_names() 
-precipitation_dataset_2017$year <- c("2017", "2017", "2017", "2017",
-                                     "2017", "2017", "2017", "2017",
-                                     "2017", "2017", "2017", "2017"
-                                     )
-
+  na.omit() %>%
+  janitor::clean_names() %>% 
+mutate( year = '2017' )
+ 
+####check points####
+view(precipitation_dataset_2017)
+summary(precipitation_dataset_2017)
+count(precipitation_dataset_2017)
+####checkend#####
 
 ```
 
@@ -55,11 +63,13 @@ precipitation_dataset_2018 = read_excel(path = "../data/Trash-Wheel-Collection-T
                                         sheet = "2018 Precipitation",
                                         range = "A2:B14") %>% 
   na.omit() %>% 
-  janitor::clean_names() 
-precipitation_dataset_2018$year <- c("2018", "2018", "2018", "2018",
-                                     "2018", "2018", "2018", "2018",
-                                     "2018", "2018", "2018", "2018"
-                                     )
+  janitor::clean_names() %>%
+mutate( year = '2018' )
+
+####check points####
+view(precipitation_dataset_2018)
+summary(precipitation_dataset_2018)
+####checkend#####
 
 ```
 
@@ -75,6 +85,10 @@ precipitation_dataset = left_join(
   rename("2017" = "total_2017", "2018" = "total_2018") 
 precipitation_dataset$month = month.name[precipitation_dataset$month]
 
+######checkpoints####
+view(precipitation_dataset)
+summary(precipitation_dataset)
+######checkend####
 
 
 ```
@@ -86,13 +100,14 @@ the total precipitation in 2018 is `r sum(precipitation_dataset_2018$total, na.r
 
 Write a paragraph about these data; you are encouraged to use inline R. Be sure to note the number of observations in both resulting datasets, and give examples of key variables. For available data, what was the total precipitation in 2018? What was the median number of sports balls in a dumpster in 2017?
 
-# question 2
+# problem 2
 ```{r, pols, echo = TRUE}
 ##load and clean data in pols-month.csv
 pols_month_dataset = read_csv(file = "../data/pols-month.csv") %>%   ##load pols-month.csv
   janitor::clean_names() %>% ##clean the dataset
   separate(col = "mon", sep = "-", into = c("year", "month", "day"), 
-           convert = type.convert("month", "year", "day" , numerals = c("allow.loss"))) %>%  ##separate to year, month, day, and transfer month format "01" "02"... to "1", "2)
+           convert = type.convert("month", "year", "day" , 
+                                  numerals = c("allow.loss"))) %>%  ##separate to year, month, day, and transfer month format "01" "02"... to "1", "2)
   transform(month = month.abb[month]) %>%   ##replace month number with month name
   mutate(president = case_when(
     prez_dem == 1 ~ "dem",
@@ -101,6 +116,9 @@ pols_month_dataset = read_csv(file = "../data/pols-month.csv") %>%   ##load pols
   )) %>%  ##add variable president with value "dem" and "gop"
   select("year", "month", "gov_gop":"rep_gop", "gov_dem":"rep_dem", "president") ##remove prez_gop, prez_dem and day variable
 
+summary(pols_month_dataset)
+count(pols_month_dataset)
+
 
 ```
 
@@ -108,12 +126,13 @@ pols_month_dataset = read_csv(file = "../data/pols-month.csv") %>%   ##load pols
 ##load and clean data in snp.csv
 snp_dataset = read_csv(file = "../data/snp.csv") %>% ##load the data
   janitor::clean_names() %>%                         ##clean the data
-  separate(col = "date", sep = "/", into = c("month", "day", "year"), 
-           convert = type.convert("month", "day", "year", numerals = c("allow.loss"))) %>% 
+  separate(col = "date", 
+           sep = "/", 
+           into = c("month", "day", "year"), 
+           convert = type.convert("month", "day", "year", 
+                                  numerals = c("allow.loss"))) %>% 
   transform(month = month.abb[month]) %>%            ##separate the data
-  select("year", "month", "day", everything())       ##arrange the data
-  
-  
+  select("year", "month", "day", everything()) 
 
 ```
 
@@ -141,7 +160,7 @@ merg_snp_pols_unem_dataset = left_join(merg_snp_pols_dataset, unemployment_datas
 summary
 Write a short paragraph about these datasets. Explain briefly what each dataset contained, and describe the resulting dataset (e.g. give the dimension, range of years, and names of key variables). 
 
-# question 3
+# problem 3
 ```{r, babyname, echo = TRUE}
 #load and clean the data
 popular_baby_name_dataset = read_csv(file = "../data/Popular_Baby_Names.csv") %>% 
